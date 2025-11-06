@@ -1,0 +1,357 @@
+{
+  "name": "Cliente envia",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "079ca5a3-ceac-41d9-bdb7-a59f114a89f4",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        192
+      ],
+      "id": "16d6dc70-1624-4e95-90a0-c917e2ce3744",
+      "name": "Webhook",
+      "webhookId": "079ca5a3-ceac-41d9-bdb7-a59f114a89f4"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        768,
+        192
+      ],
+      "id": "31d968aa-c45e-480b-a022-5e912ad3768c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "B9TT8sRTV8Z2fdba",
+          "mode": "list",
+          "cachedResultName": "pc-info",
+          "cachedResultUrl": "/projects/dLQT3BTFiUn1I6eE/datatables/B9TT8sRTV8Z2fdba"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "machine_name": "={{ $json.machine_name }}",
+            "collected_at": "={{ $json.collected_at }}",
+            "user_name": "={{ $json.payload.computer.userName }}",
+            "manufacturer": "={{ $json.payload.computer.manufacturer }}",
+            "model": "={{ $json.payload.computer.model }}",
+            "os_caption": "={{ $json.payload.computer.os.caption }}",
+            "os_version": "={{ $json.payload.computer.os.version }}",
+            "os_build_number": "={{ $json.payload.computer.os.buildNumber }}",
+            "os_architecture": "={{ $json.payload.computer.os.architecture }}",
+            "active_process": "={{ $json.payload.activeApp.process }}",
+            "active_title": "={{ $json.payload.activeApp.title }}",
+            "cpu_name": "={{ $json.payload.cpu.name }}",
+            "cpu_logical_processors": "={{ $json.payload.cpu.logicalProcessors }}",
+            "ram_total_mb": "={{ $json.payload.ram.totalMB }}",
+            "ram_free_mb": "={{ $json.payload.ram.freeMB }}",
+            "ram_used_mb": "={{ $json.payload.ram.usedMB }}",
+            "wifi_ssid": "={{ $json.payload.network.wifiSsid }}",
+            "ram_used_pct": "={{ $json.payload.ram.usedPct }}",
+            "ip_hint": "={{ $json.ip }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "machine_name",
+              "displayName": "machine_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "collected_at",
+              "displayName": "collected_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "user_name",
+              "displayName": "user_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "manufacturer",
+              "displayName": "manufacturer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "model",
+              "displayName": "model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "os_caption",
+              "displayName": "os_caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "os_version",
+              "displayName": "os_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "os_build_number",
+              "displayName": "os_build_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "os_architecture",
+              "displayName": "os_architecture",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "active_process",
+              "displayName": "active_process",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "active_title",
+              "displayName": "active_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "cpu_name",
+              "displayName": "cpu_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "cpu_logical_processors",
+              "displayName": "cpu_logical_processors",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ram_total_mb",
+              "displayName": "ram_total_mb",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ram_free_mb",
+              "displayName": "ram_free_mb",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ram_used_mb",
+              "displayName": "ram_used_mb",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "wifi_ssid",
+              "displayName": "wifi_ssid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ram_used_pct",
+              "displayName": "ram_used_pct",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ip_hint",
+              "displayName": "ip_hint",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        512,
+        192
+      ],
+      "id": "c7cf4d54-917e-43e2-a325-2ba00b4cdbf8",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Intenta leer JSON de query.d (GET) o del body (POST)\nlet raw = null;\n\nif ($json.query && $json.query.d) {\n  raw = $json.query.d;\n} else if ($json.body && Object.keys($json.body).length) {\n  // Puede venir ya objeto o string\n  raw = typeof $json.body === 'string' ? $json.body : JSON.stringify($json.body);\n}\n\nlet obj;\ntry {\n  // Si viene URI-encoded desde GET\n  obj = JSON.parse(decodeURIComponent(raw));\n} catch (e) {\n  // Si no estaba encoded\n  obj = JSON.parse(raw);\n}\n\n// Extractores útiles para índices/consultas rápidas:\nconst machine = obj?.computer?.machineName || obj?.computer?.name || 'UNKNOWN';\nconst collectedAt = obj?.collectedAt || new Date().toISOString();\nconst cpuPct = Number(obj?.cpu?.totalPct ?? null);\nconst ramPct = Number(obj?.ram?.usedPct ?? null);\nconst activeTitle = obj?.activeApp?.title ?? null;\nconst ssid = obj?.network?.wifiSsid ?? null;\n\n// IP (si te interesa guardarla, mejor la del adaptador, fallback al header)\nlet ip = null;\ntry {\n  const ip4 = obj?.network?.adapters?.find(a => Array.isArray(a.ipv4) && a.ipv4.length > 0)?.ipv4?.[0]?.IPAddress;\n  ip = ip4 || $json.headers['x-real-ip'] || $json.headers['x-forwarded-for'] || null;\n} catch (e) {}\n\nreturn [{\n  json: {\n    machine_name: machine,\n    collected_at: collectedAt,\n    cpu_total_pct: isNaN(cpuPct) ? null : cpuPct,\n    ram_used_pct: isNaN(ramPct) ? null : ramPct,\n    active_title: activeTitle,\n    ssid,\n    ip,\n    payload: obj, // guardamos el JSON completo\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        192
+      ],
+      "id": "6b685d3d-77a1-4d29-b266-8a620f1ad977",
+      "name": "Data order"
+    },
+    {
+      "parameters": {
+        "content": "Workflow que recibe la telemetría enviada desde PowerShell mediante un webhook, ordena y normaliza los datos, y los inserta en una tabla SQL interna de n8n. Actúa como punto de ingestión principal donde el cliente (PC) almacena toda su información de sistema.",
+        "height": 128,
+        "width": 864
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e90b13ee-d242-469c-bbe8-45771ed6cb80",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Data order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Data order": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c0ceec34-0f7b-4a78-9c90-1e36b1389b27",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "id": "NOqhpynNaTaYMbeI",
+  "tags": []
+}

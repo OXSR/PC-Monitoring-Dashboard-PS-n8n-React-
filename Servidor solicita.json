@@ -1,0 +1,160 @@
+{
+  "name": "Servidor solicita",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "ff454afd-eb30-4d2e-ab13-54c945981f0a",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        192,
+        0
+      ],
+      "id": "bb7ed482-da49-430e-836c-225235afb039",
+      "name": "Webhook",
+      "webhookId": "ff454afd-eb30-4d2e-ab13-54c945981f0a"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "B9TT8sRTV8Z2fdba",
+          "mode": "list",
+          "cachedResultName": "pc-info",
+          "cachedResultUrl": "/projects/dLQT3BTFiUn1I6eE/datatables/B9TT8sRTV8Z2fdba"
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "d2b108e8-5fc6-4ac8-9bf2-c6643e0548e1",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "504413b0-b39f-4333-8d4e-9dcaf5bc08e1",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Recoge todos los items de entrada\nconst items = $input.all();\n\n// Si no hay items, devuelve vacío\nif (!items.length) {\n  return [];\n}\n\n// Si el primer item tiene una propiedad \"rows\" o un array interno (como devuelto por Postgres),\n// lo toma directamente\nlet merged = {};\n\nfor (const item of items) {\n  const data = item.json;\n\n  // Caso: { rows: [...] } (por ejemplo, salida del Postgres node)\n  if (Array.isArray(data.rows)) {\n    merged.rows = (merged.rows || []).concat(data.rows);\n  }\n\n  // Caso: array directo\n  else if (Array.isArray(data)) {\n    merged.rows = (merged.rows || []).concat(data);\n  }\n\n  // Caso: objeto plano\n  else if (typeof data === 'object') {\n    merged = Object.assign(merged, data);\n  }\n}\n\n// Si solo tienes arrays (la mayoría de casos), asegúrate de devolver un array único\nif (merged.rows) {\n  return [{ json: merged.rows }];\n}\n\n// Si es un objeto plano fusionado, devuélvelo así\nreturn [{ json: merged }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "0249bbff-ad24-4a3f-a7fd-f822da3e51a8",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Toma todos los items de entrada (cada uno es una fila de la DB)\n// o, si viene un único item con un array (p.ej. { rows: [...] } o el propio array),\n// también lo maneja.\n\nfunction asArray(inputItems) {\n  if (!inputItems || inputItems.length === 0) return [];\n  const first = inputItems[0]?.json;\n\n  // Caso: el propio item es un array\n  if (Array.isArray(first)) return first;\n\n  // Caso: { rows: [...] }\n  if (first && Array.isArray(first.rows)) return first.rows;\n\n  // Caso normal: cada item es una fila\n  return inputItems.map(i => i.json);\n}\n\nconst rows = asArray($input.all());\nif (rows.length === 0) {\n  // Nada que devolver\n  return [];\n}\n\n// Normaliza id a número para ordenar\nfunction numId(x) {\n  const n = Number(x?.id);\n  return Number.isFinite(n) ? n : -Infinity;\n}\n\n// Fecha para desempate (collected_at -> createdAt -> updatedAt)\nfunction ts(x) {\n  const a = Date.parse(x?.collected_at ?? x?.createdAt ?? x?.updatedAt ?? 0);\n  return Number.isFinite(a) ? a : -Infinity;\n}\n\n// Ordena: id DESC, y si empata, timestamp DESC\nrows.sort((a, b) => {\n  const d = numId(b) - numId(a);\n  return d !== 0 ? d : (ts(b) - ts(a));\n});\n\n// Último registro (id más alto)\nconst last = rows[0];\n\n// (Opcional) Si alguna columna JSONB vino como string y quieres\n// devolverla como objeto, descoméntalo:\n// for (const k of ['payload','headers','storage_logical_disks','network_adapters']) {\n//   if (typeof last[k] === 'string') {\n//     try { last[k] = JSON.parse(last[k]); } catch (e) {}\n//   }\n// }\n\nreturn [{ json: last }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "015bfd0d-c393-4f65-a53c-5dc5eb7ed4ef",
+      "name": "Último"
+    },
+    {
+      "parameters": {
+        "content": "API de consulta para el dashboard. Al recibir una petición vía webhook, el workflow obtiene las filas de la tabla SQL, fusiona los resultados, selecciona el registro más reciente y devuelve un JSON limpio al servidor React. Es el punto de acceso para leer la telemetría almacenada.",
+        "width": 944
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        192,
+        -208
+      ],
+      "id": "533d9137-d0ca-48b9-9223-bcf89aa4fe6d",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Último",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Último": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e96c3494-d7e9-43ca-808c-25999865cdde",
+  "meta": {
+    "instanceId": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "id": "jXzAmAZoE6hPvAIh",
+  "tags": []
+}
